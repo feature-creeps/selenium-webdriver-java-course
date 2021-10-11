@@ -13,17 +13,16 @@ jobs:
     env:
       RUNNER_OS: true
       HEADLESS_CHROME: true
+      BUILDEVENT_FILE: '../buildevents.txt'
 
     steps:
       - name: Set start time
         run: | 
           echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
-          env
       - uses: kvrhdn/gha-buildevents@v1
         with:
-          apikey:  ${{ secrets.BUILDEVENTS_APIKEY }}
+          apikey: ${{ secrets.BUILDEVENTS_APIKEY }}
           dataset: test-feature-creeps
-
           job-status: ${{ job.status }}
 
       - name: Telemetry start - Checkout
@@ -41,10 +40,12 @@ jobs:
         run: |
           echo "STEP_ID=setup-java" >> $GITHUB_ENV
           echo "STEP_START=$(date +%s)" >> $GITHUB_ENV
+          echo "JAVA_DISTRIBUTION=zulu" >> $GITHUB_ENV $BUILDEVENT_FILE
+          echo "JAVA_VERSION=16" >> $GITHUB_ENV $BUILDEVENT_FILE
       - uses: actions/setup-java@v2
         with:
-          distribution: 'zulu'
-          java-version: 16
+          distribution: $JAVA_DISTRIBUTION
+          java-version:  $JAVA_VERSION
       - name: Telemetry write - Setup java
         if: always()
         run: buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
