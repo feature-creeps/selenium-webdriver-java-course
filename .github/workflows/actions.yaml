@@ -1,0 +1,69 @@
+name: on_push
+
+on:
+  push:
+    branch:
+      - "**" # This will run on all branches, and must be quoted to be handled by yaml
+
+jobs:
+
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    env:
+      RUNNER_OS: true
+      HEADLESS_CHROME: true
+
+    steps:
+      - name: Set start time
+        run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+      - uses: kvrhdn/gha-buildevents@v1
+        with:
+          apikey:  ${{ secrets.BUILDEVENTS_APIKEY }}
+          dataset: test-feature-creeps
+
+          job-status: ${{ job.status }}
+
+      - name: Telemetry start - Checkout
+        run: |
+          echo "STEP_ID='checkout'" >> $GITHUB_ENV
+          echo "STEP_START=$(date +%s)" >> $GITHUB_ENV
+      - uses: actions/checkout@v2
+      - name: Telemetry write - checkout
+        run: buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
+
+      - name: Telemetry start - Setup java
+        run: |
+          echo "STEP_ID=setup-java" >> $GITHUB_ENV
+          echo "STEP_START=$(date +%s)" >> $GITHUB_ENV
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: 16
+      - name: Telemetry write - Setup java
+        run: buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
+
+      - name: Telemetry start - Run maven tests
+        run: |
+          echo "STEP_ID='run-maven-tests'" >> $GITHUB_ENV
+          echo "STEP_START=$(date +%s)" >> $GITHUB_ENV
+      - name: Run tests with maven
+        working-directory: webdriver_java
+        run: buildevents cmd $TRACE_ID $STEP_ID 'mvn test' --- mvn test
+      - name: Telemetry write - Run maven tests
+        run: buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
+
+      - name: Telemetry start - Collect build data
+        run: |
+          echo "STEP_ID='collect-build-data'" >> $GITHUB_ENV
+          echo "STEP_START=$(date +%s)" >> $GITHUB_ENV
+      - name: Collect build data
+        working-directory: webdriver_java
+        env:
+          PUSHGATEWAY_URL: ${{ secrets.PUSHGATEWAY_URL }}
+        if: always()
+        run: |
+          echo "github_actions_total_duration $(expr $(date +%s) - ${START_TIME})" | curl --data-binary @- ${PUSHGATEWAY_URL}/metrics/job/github_actions
+          ./resources/test_result_script.sh
+      - name: Telemetry write - Collect build data
+        run: buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
