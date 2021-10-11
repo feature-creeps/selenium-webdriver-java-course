@@ -24,6 +24,9 @@ jobs:
           apikey: ${{ secrets.BUILDEVENTS_APIKEY }}
           dataset: test-feature-creeps
           job-status: ${{ job.status }}
+      - name: Set up build events file
+        run: | 
+          echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
 
       - name: Telemetry start - Checkout
         if: always()
@@ -61,7 +64,7 @@ jobs:
       - name: Telemetry write - Run maven tests
         if: always()
         run: |
-          echo "ABBY=testing" >> $BUILDEVENT_FILE
+          echo ' label=abby' >> $BUILDEVENT_FILE
           buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
 
       - name: Telemetry start - Collect build data
