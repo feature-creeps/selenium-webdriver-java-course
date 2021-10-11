@@ -40,8 +40,10 @@ jobs:
         run: |
           echo "STEP_ID=setup-java" >> $GITHUB_ENV
           echo "STEP_START=$(date +%s)" >> $GITHUB_ENV
-          echo "JAVA_DISTRIBUTION=zulu" >> $GITHUB_ENV $BUILDEVENT_FILE
-          echo "JAVA_VERSION=16" >> $GITHUB_ENV $BUILDEVENT_FILE
+          echo "JAVA_DISTRIBUTION=zulu" >> $GITHUB_ENV
+          echo "JAVA_DISTRIBUTION=zulu" >> $BUILDEVENT_FILE
+          echo "JAVA_VERSION=16" >> $GITHUB_ENV
+          echo "JAVA_VERSION=16" >> $BUILDEVENT_FILE
       - uses: actions/setup-java@v2
         env:
           DISTRO: ${ env.JAVA_DISTRIBUTION}
