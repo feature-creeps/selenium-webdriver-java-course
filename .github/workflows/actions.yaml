@@ -16,7 +16,9 @@ jobs:
 
     steps:
       - name: Set start time
-        run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+        run: | 
+          echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+          env
       - uses: kvrhdn/gha-buildevents@v1
         with:
           apikey:  ${{ secrets.BUILDEVENTS_APIKEY }}
