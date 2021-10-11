@@ -49,7 +49,7 @@ jobs:
           echo "STEP_START=$(date +%s)" >> $GITHUB_ENV
       - name: Run tests with maven
         working-directory: webdriver_java
-        run: buildevents cmd $TRACE_ID $STEP_ID 'mvn test' --- mvn test
+        run: buildevents cmd $TRACE_ID $STEP_ID 'mvn test' -- mvn test
       - name: Telemetry write - Run maven tests
         run: buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
 
