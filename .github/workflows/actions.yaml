@@ -41,16 +41,11 @@ jobs:
           echo "STEP_ID=setup-java" >> $GITHUB_ENV
           echo "STEP_START=$(date +%s)" >> $GITHUB_ENV
           echo "JAVA_DISTRIBUTION=zulu" >> $GITHUB_ENV
-          echo "JAVA_DISTRIBUTION=zulu" >> $BUILDEVENT_FILE
           echo "JAVA_VERSION=16" >> $GITHUB_ENV
-          echo "JAVA_VERSION=16" >> $BUILDEVENT_FILE
       - uses: actions/setup-java@v2
-        env:
-          DISTRO: ${ env.JAVA_DISTRIBUTION}
-          VERSION:  ${ env.JAVA_VERSION}
         with:
-          distribution: $DISTRO
-          java-version:  $VERSION
+          distribution: 'zulu'
+          java-version: 16
       - name: Telemetry write - Setup java
         if: always()
         run: buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
@@ -65,7 +60,9 @@ jobs:
         run: buildevents cmd $TRACE_ID $STEP_ID 'mvn test' -- mvn test
       - name: Telemetry write - Run maven tests
         if: always()
-        run: buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
+        run: |
+          echo "ABBY=testing" >> $BUILDEVENT_FILE
+          buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
 
       - name: Telemetry start - Collect build data
         if: always()
