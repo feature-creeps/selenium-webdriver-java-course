@@ -44,8 +44,8 @@ jobs:
           echo "JAVA_VERSION=16" >> $GITHUB_ENV $BUILDEVENT_FILE
       - uses: actions/setup-java@v2
         env:
-          DISTRO: $JAVA_DISTRIBUTION
-          VERSION:  $JAVA_VERSION
+          DISTRO: ${ env.JAVA_DISTRIBUTION}
+          VERSION:  ${ env.JAVA_VERSION}
         with:
           distribution: $DISTRO
           java-version:  $VERSION
