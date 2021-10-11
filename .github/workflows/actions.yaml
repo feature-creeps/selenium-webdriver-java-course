@@ -43,9 +43,12 @@ jobs:
           echo "JAVA_DISTRIBUTION=zulu" >> $GITHUB_ENV $BUILDEVENT_FILE
           echo "JAVA_VERSION=16" >> $GITHUB_ENV $BUILDEVENT_FILE
       - uses: actions/setup-java@v2
+        env:
+          DISTRO: $JAVA_DISTRIBUTION
+          VERSION:  $JAVA_VERSION
         with:
-          distribution: $JAVA_DISTRIBUTION
-          java-version:  $JAVA_VERSION
+          distribution: $DISTRO
+          java-version:  $VERSION
       - name: Telemetry write - Setup java
         if: always()
         run: buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
