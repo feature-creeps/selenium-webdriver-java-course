@@ -9,11 +9,12 @@ jobs:
 
   build_and_test:
     runs-on: ubuntu-latest
+    working_directory: webdriver_java
 
     env:
       RUNNER_OS: true
       HEADLESS_CHROME: true
-      BUILDEVENT_FILE: '/home/runner/work/gha-buildevents/buildevents.txt'
+      BUILDEVENT_FILE: './buildevents.txt'
 
     steps:      
       - name: Set start time
