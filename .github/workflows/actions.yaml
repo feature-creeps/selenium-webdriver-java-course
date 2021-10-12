@@ -9,7 +9,6 @@ jobs:
 
   build_and_test:
     runs-on: ubuntu-latest
-    working_directory: webdriver_java
 
     env:
       RUNNER_OS: true
@@ -27,52 +26,54 @@ jobs:
           job-status: ${{ job.status }}
       - name: Set up build events file
         run: | 
+          echo $BUILDEVENTS_FILE
+          cat $BUILDEVENTS_FILE
           echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
 
-      - name: Telemetry start - Checkout
-        if: always()
-        run: |
-          echo "STEP_ID='checkout'" >> $GITHUB_ENV
-          echo "STEP_START=$(date +%s)" >> $GITHUB_ENV
-      - uses: actions/checkout@v2
-      - name: Telemetry write - checkout
-        if: always()
-        run: buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
+      # - name: Telemetry start - Checkout
+      #   if: always()
+      #   run: |
+      #     echo "STEP_ID='checkout'" >> $GITHUB_ENV
+      #     echo "STEP_START=$(date +%s)" >> $GITHUB_ENV
+      # - uses: actions/checkout@v2
+      # - name: Telemetry write - checkout
+      #   if: always()
+      #   run: buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
 
-      - name: Telemetry start - Setup java
-        if: always()
-        run: |
-          echo "STEP_ID=setup-java" >> $GITHUB_ENV
-          echo "STEP_START=$(date +%s)" >> $GITHUB_ENV
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'zulu'
-          java-version: 16
-      - name: Telemetry write - Setup java
-        if: always()
-        run: buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
+      # - name: Telemetry start - Setup java
+      #   if: always()
+      #   run: |
+      #     echo "STEP_ID=setup-java" >> $GITHUB_ENV
+      #     echo "STEP_START=$(date +%s)" >> $GITHUB_ENV
+      # - uses: actions/setup-java@v2
+      #   with:
+      #     distribution: 'zulu'
+      #     java-version: 16
+      # - name: Telemetry write - Setup java
+      #   if: always()
+      #   run: buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
 
-      - name: Telemetry start - Run maven tests
-        if: always()
-        run: |
-          echo "STEP_ID='run-maven-tests'" >> $GITHUB_ENV
-          echo "STEP_START=$(date +%s)" >> $GITHUB_ENV
-      - name: Run tests with maven
-        working-directory: webdriver_java
-        run: buildevents cmd $TRACE_ID $STEP_ID 'mvn test' -- mvn test
-      - name: Telemetry write - Run maven tests
-        working-directory: webdriver_java
-        if: always()
-        env:
-            BUILDEVENT_FILE_STEP: ../$BUILDEVENTS_FILE
-            PUSHGATEWAY_URL: ${{ secrets.PUSHGATEWAY_URL }}
-        run: |
-          echo $BUILDEVENTS_FILE
-          echo $BUILDEVENTS_FILE_STEP
-          echo Contents of BUILDEVENT_FILE before:
-          cat $BUILDEVENT_FILE
-          echo "github_actions_total_duration $(expr $(date +%s) - ${START_TIME})" | curl --data-binary @- ${PUSHGATEWAY_URL}/metrics/job/github_actions
-          ./resources/test_result_script.sh
-          buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
-          echo Contents of BUILDEVENT_FILE after:
-          cat $BUILDEVENT_FILE
+      # - name: Telemetry start - Run maven tests
+      #   if: always()
+      #   run: |
+      #     echo "STEP_ID='run-maven-tests'" >> $GITHUB_ENV
+      #     echo "STEP_START=$(date +%s)" >> $GITHUB_ENV
+      # - name: Run tests with maven
+      #   working-directory: webdriver_java
+      #   run: buildevents cmd $TRACE_ID $STEP_ID 'mvn test' -- mvn test
+      # - name: Telemetry write - Run maven tests
+      #   working-directory: webdriver_java
+      #   if: always()
+      #   env:
+      #       BUILDEVENT_FILE_STEP: ../$BUILDEVENTS_FILE
+      #       PUSHGATEWAY_URL: ${{ secrets.PUSHGATEWAY_URL }}
+      #   run: |
+      #     echo $BUILDEVENTS_FILE
+      #     echo $BUILDEVENTS_FILE_STEP
+      #     echo Contents of BUILDEVENT_FILE before:
+      #     cat $BUILDEVENT_FILE
+      #     echo "github_actions_total_duration $(expr $(date +%s) - ${START_TIME})" | curl --data-binary @- ${PUSHGATEWAY_URL}/metrics/job/github_actions
+      #     ./resources/test_result_script.sh
+      #     buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
+      #     echo Contents of BUILDEVENT_FILE after:
+      #     cat $BUILDEVENT_FILE
