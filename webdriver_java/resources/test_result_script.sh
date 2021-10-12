@@ -20,8 +20,8 @@ EOF
 
 echo "BUILDEVENT_FILE_EXTRA=$BUILDEVENT_FILE_EXTRA"
 echo "BUILDEVENT_FILE=$BUILDEVENT_FILE"
-echo " gha.maven_tests.ignored=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $2 }')" >> $BUILDEVENT_FILE
-echo " gha.maven_tests.total=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $4 }')" >> $BUILDEVENT_FILE
-echo " gha.maven_tests.passed=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $6 }')" >> $BUILDEVENT_FILE
-echo " gha.maven_tests.failed=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $8 }')" >> $BUILDEVENT_FILE
-echo " gha.maven_tests.skipped=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $10 }')" >> $BUILDEVENT_FILE
+echo " gha.maven_tests.ignored=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $2 }')" >> $BUILDEVENT_FILE_EXTRA
+echo " gha.maven_tests.total=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $4 }')" >> $BUILDEVENT_FILE_EXTRA
+echo " gha.maven_tests.passed=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $6 }')" >> $BUILDEVENT_FILE_EXTRA
+echo " gha.maven_tests.failed=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $8 }')" >> $BUILDEVENT_FILE_EXTRA
+echo " gha.maven_tests.skipped=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $10 }')" >> $BUILDEVENT_FILE_EXTRA

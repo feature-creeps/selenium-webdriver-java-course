@@ -9,15 +9,11 @@ jobs:
 
   build_and_test:
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: ./webdriver_java
     
     env:
       RUNNER_OS: true
       HEADLESS_CHROME: true
-      BUILDEVENT_FILE: './webdriver_java/buildevents.txt' # This will be the root of our working directory
+      BUILDEVENT_FILE: './buildevents.txt' # This will be the root of our working directory
 
     steps:      
       - name: Set start time
@@ -55,6 +51,7 @@ jobs:
 
       - name: Telemetry start - Run maven tests
         if: always()
+        working-directory: webdriver_java
         run: |
           echo "STEP_ID='run-maven-tests'" >> $GITHUB_ENV
           echo "STEP_START=$(date +%s)" >> $GITHUB_ENV
@@ -62,8 +59,9 @@ jobs:
         run: buildevents cmd $TRACE_ID $STEP_ID 'mvn test' -- mvn test
       - name: Telemetry write - Run maven tests
         if: always()
+        working-directory: webdriver_java
         env:
-            BUILDEVENT_FILE_EXTRA: $BUILDEVENT_FILE
+            BUILDEVENT_FILE_EXTRA: ../$BUILDEVENT_FILE
             PUSHGATEWAY_URL: ${{ secrets.PUSHGATEWAY_URL }}
         run: |
           echo "github_actions_total_duration $(expr $(date +%s) - ${START_TIME})" | curl --data-binary @- ${PUSHGATEWAY_URL}/metrics/job/github_actions
