@@ -17,7 +17,7 @@ jobs:
     env:
       RUNNER_OS: true
       HEADLESS_CHROME: true
-      BUILDEVENT_FILE: './buildevents.txt' # This will be the root of our working directory
+      BUILDEVENT_FILE: './webdriver_java/buildevents.txt' # This will be the root of our working directory
 
     steps:      
       - name: Set start time
