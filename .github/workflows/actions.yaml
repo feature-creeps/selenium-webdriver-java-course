@@ -13,7 +13,7 @@ jobs:
     env:
       RUNNER_OS: true
       HEADLESS_CHROME: true
-      BUILDEVENT_FILE: '../buildevents.txt'
+      BUILDEVENT_FILE: './buildevents.txt'
 
     steps:
       - name: Set start time
@@ -63,9 +63,11 @@ jobs:
         working-directory: webdriver_java
         if: always()
         env:
-            BUILDEVENT_FILE: $BUILDEVENTS_FILE
+            BUILDEVENT_FILE_STEP: ../$BUILDEVENTS_FILE
             PUSHGATEWAY_URL: ${{ secrets.PUSHGATEWAY_URL }}
         run: |
+          echo $BUILDEVENTS_FILE
+          echo $BUILDEVENTS_FILE_STEP
           echo Contents of BUILDEVENT_FILE before:
           cat $BUILDEVENT_FILE
           echo "github_actions_total_duration $(expr $(date +%s) - ${START_TIME})" | curl --data-binary @- ${PUSHGATEWAY_URL}/metrics/job/github_actions
