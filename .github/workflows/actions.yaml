@@ -26,8 +26,8 @@ jobs:
           job-status: ${{ job.status }}
       - name: Set up build events file
         run: | 
-          echo $BUILDEVENTS_FILE
-          cat $BUILDEVENTS_FILE
+          echo $BUILDEVENT_FILE
+          cat $BUILDEVENT_FILE
           echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
 
       # - name: Telemetry start - Checkout
