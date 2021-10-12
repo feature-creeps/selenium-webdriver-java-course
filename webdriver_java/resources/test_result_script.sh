@@ -17,3 +17,9 @@ github_actions_passed_tests{action_id="${GITHUB_RUN_NUMBER}",commit="${GITHUB_SH
 github_actions_failed_tests{action_id="${GITHUB_RUN_NUMBER}",commit="${GITHUB_SHA}", actor="${GITHUB_ACTOR}", branch="${GITHUB_REF}"} $(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $8 }')
 github_actions_skipped_tests{action_id="${GITHUB_RUN_NUMBER}",commit="${GITHUB_SHA}", actor="${GITHUB_ACTOR}", branch="${GITHUB_REF}"} $(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $10 }')
 EOF
+
+echo " gha.maven_tests.ignored=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $2 }')" >> $GITHUB_ENV
+echo " gha.maven_tests.total=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $4 }')" >> $GITHUB_ENV
+echo " gha.maven_tests.passed=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $6 }')" >> $GITHUB_ENV
+echo " gha.maven_tests.failed=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $8 }')" >> $GITHUB_ENV
+echo " gha.maven_tests.skipped=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $10 }')" >> $GITHUB_ENV
