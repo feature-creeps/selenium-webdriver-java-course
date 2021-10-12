@@ -19,7 +19,9 @@ github_actions_skipped_tests{action_id="${GITHUB_RUN_NUMBER}",commit="${GITHUB_S
 EOF
 
 echo "BUILDEVENT_FILE_EXTRA=$BUILDEVENT_FILE_EXTRA"
+pwd $BUILDEVENT_FILE_EXTRA
 echo "BUILDEVENT_FILE=$BUILDEVENT_FILE"
+pwd $BUILDEVENT_FILE
 echo " gha.maven_tests.ignored=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $2 }')" >> $BUILDEVENT_FILE_EXTRA
 echo " gha.maven_tests.total=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $4 }')" >> $BUILDEVENT_FILE_EXTRA
 echo " gha.maven_tests.passed=$(echo ${TEST_RESULTS_STRING} | awk -F'"' '{ print $6 }')" >> $BUILDEVENT_FILE_EXTRA

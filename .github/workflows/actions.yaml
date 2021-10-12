@@ -61,9 +61,10 @@ jobs:
         if: always()
         working-directory: webdriver_java
         env:
-            BUILDEVENT_FILE_EXTRA: ../$BUILDEVENT_FILE
+            BUILDEVENT_FILE_EXTRA: ../ ${{ env.BUILDEVENT_FILE }}
             PUSHGATEWAY_URL: ${{ secrets.PUSHGATEWAY_URL }}
         run: |
+          pwd
           echo "github_actions_total_duration $(expr $(date +%s) - ${START_TIME})" | curl --data-binary @- ${PUSHGATEWAY_URL}/metrics/job/github_actions
           ./resources/test_result_script.sh
           buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
